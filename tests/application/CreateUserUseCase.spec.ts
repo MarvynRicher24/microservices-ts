@@ -6,17 +6,20 @@ describe('CreateUserUseCase', () => {
     const repoMock: Partial<IUserRepositoryPort> = {
       findByEmail: jest.fn().mockResolvedValue(null),
       create: jest.fn().mockImplementation(async (p)=> {
-        // simulate repo returning domain entity (simplify)
+        // simulate repo returning domain entity (with .toPrimitives())
         return {
-          id: p.id,
-          firstName: p.firstName,
-          lastName: p.lastName,
-          email: p.email,
-          phone: p.phone,
-          role: p.role,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        } as any;
+          toPrimitives: () => ({
+            id: p.id,
+            firstName: p.firstName,
+            lastName: p.lastName,
+            email: p.email,
+            phone: p.phone,
+            role: p.role,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            deletedAt: null
+          })
+        };
       })
     };
 

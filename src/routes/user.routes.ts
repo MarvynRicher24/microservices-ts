@@ -1,12 +1,12 @@
 // src/routes/user.routes.ts
 import { Router } from 'express';
-import { container } from '../container';
+const { container } = require('../container');
 import { userCreateValidation, userUpdateValidation } from '../middlewares/validation.middleware';
 
 const router = Router();
 
 // resolve controller from container
-const userController = container.resolve<any>('userController');
+const userController = container.resolve('userController');
 
 router.post('/', userCreateValidation, userController.create);
 router.get('/:id/with-accounts', userController.getUserWithAccounts);

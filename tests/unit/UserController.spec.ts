@@ -1,5 +1,5 @@
 import { UserController } from '../../src/controllers/UserController';
-import { IUserService } from '../../src/interfaces/IUserService';
+import { Mediator } from '../../src/Application/CQRS/Core/Mediator';
 import { Request, Response } from 'express';
 
 function mockResponse() {
@@ -12,43 +12,44 @@ function mockResponse() {
 
 describe('UserController - unit', () => {
   let ctrl: UserController;
-  let serviceMock: Partial<IUserService>;
+  let mediatorMock: Partial<Mediator>;
+  let userWithAccountsServiceMock: any;
 
   beforeEach(() => {
-    serviceMock = {
-      createUser: jest.fn(),
-      listUsers: jest.fn(),
-      getUser: jest.fn(),
-      updateUser: jest.fn(),
-      deleteUser: jest.fn(),
+    mediatorMock = {
+      send: jest.fn(),
+    };
+    userWithAccountsServiceMock = {
+      getUserWithAccounts: jest.fn(),
     };
     // @ts-ignore
-    ctrl = new UserController(serviceMock as any);
+    ctrl = new UserController(mediatorMock as any, userWithAccountsServiceMock);
   });
 
   it('create returns 201 and json', async () => {
     const req = { body: { firstName: 'A', lastName: 'B', email: 'a@b.com' } } as any;
     const res = mockResponse();
-    (serviceMock.createUser as jest.Mock).mockResolvedValue({ id: '1' });
+    (mediatorMock.send as jest.Mock).mockResolvedValue({ id: '1' });
 
     await ctrl.create(req, res, jest.fn());
     expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith({ id: '1' });
   });
 
-  it('list calls service and returns json', async () => {
+  it('list calls mediator and returns json', async () => {
     const req = { query: {} } as any;
     const res = mockResponse();
-    (serviceMock.listUsers as jest.Mock).mockResolvedValue([{ id: '1' }]);
+    (mediatorMock.send as jest.Mock).mockResolvedValue([{ id: '1' }]);
     await ctrl.list(req, res, jest.fn());
-    expect(res.json).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith([{ id: '1' }]);
   });
 
-  it('remove returns 204', async () => {
+  it('delete returns 204', async () => {
     const req = { params: { id: '1' } } as any;
     const res = mockResponse();
-    (serviceMock.deleteUser as jest.Mock).mockResolvedValue(undefined);
-    await ctrl.remove(req, res, jest.fn());
+    (mediatorMock.send as jest.Mock).mockResolvedValue(undefined);
+    await ctrl.delete(req, res, jest.fn());
     expect(res.status).toHaveBeenCalledWith(204);
+    expect(res.send).toHaveBeenCalled();
   });
 });
