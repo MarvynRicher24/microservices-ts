@@ -1,0 +1,1 @@
+{"version":3,"file":"RoleAssigner.js","sourceRoot":"","sources":["../../../src/Domain/Services/RoleAssigner.ts"],"names":[],"mappings":";;;AAAA,wCAAiD;AAGjD;;;GAGG;AACH,MAAa,YAAY;IACrB,MAAM,CAAC,eAAe,CAAC,KAAY;QAC/B,MAAM,MAAM,GAAG,KAAK,CAAC,SAAS,EAAE,CAAC;QACjC,OAAO,MAAM,KAAK,aAAa,CAAC,CAAC,CAAC,iBAAU,CAAC,KAAK,CAAC,CAAC,CAAC,iBAAU,CAAC,IAAI,CAAC;IACzE,CAAC;CACJ;AALD,oCAKC"}
